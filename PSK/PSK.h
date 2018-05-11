@@ -1,0 +1,60 @@
+// PSK.h : PSK DLL 的主头文件
+//
+
+#pragma once
+
+#ifndef __AFXWIN_H__
+	#error "在包含此文件之前包含“stdafx.h”以生成 PCH 文件"
+#endif
+
+#include "resource.h"		// 主符号
+
+const int BL = 51;
+const double H_LowPass32K[BL] = {
+  -0.001011934093405,-0.001123478637641,-0.001298626927152,-0.001520588227436,
+  -0.001747653947094,-0.001913420002694,-0.001929644342907,-0.001691664216573,
+  -0.001086056280746,8.492904869333e-019,  0.00166837825921, 0.003999528765276,
+   0.007042773311344,  0.01080825320287,  0.01526131242687,  0.02031992732201,
+    0.02585556520426,  0.03169758582342,  0.03764101345276,  0.04345722799691,
+    0.04890687471663,  0.05375409570131,  0.05778105954255,   0.0608017204536,
+    0.06267377915538,  0.06330794268247,  0.06267377915538,   0.0608017204536,
+    0.05778105954255,  0.05375409570131,  0.04890687471663,  0.04345722799691,
+    0.03764101345276,  0.03169758582342,  0.02585556520426,  0.02031992732201,
+    0.01526131242687,  0.01080825320287, 0.007042773311344, 0.003999528765276,
+    0.00166837825921,8.492904869333e-019,-0.001086056280746,-0.001691664216573,
+  -0.001929644342907,-0.001913420002694,-0.001747653947094,-0.001520588227436,
+  -0.001298626927152,-0.001123478637641,-0.001011934093405
+};
+// CPSKApp
+// 有关此类实现的信息，请参阅 PSK.cpp
+//
+
+class CPSKApp : public CWinApp
+{
+public:
+	CPSKApp();
+
+// 重写
+public:
+	virtual BOOL InitInstance();
+
+	DECLARE_MESSAGE_MAP()
+};
+
+class CAlgorithm
+{
+public:
+	CAlgorithm(void);
+	virtual ~CAlgorithm(void);
+	void	RunAlgorithm(const double *pdInput, double *pdOutput);
+	void	Reset();
+	enum IN_PortName{IN1=0, IN2, IN3, IN4, IN5, IN6, IN7, IN8, IN9, IN10, W1, W2, W3, W4};
+	enum OUT_PortName{OUT1=0, OUT2, OUT3, OUT4, OUT5, OUT6, OUT7, OUT8, OUT9, OUT10};
+private:
+	double	LowPass(const double DataIn);
+	double	CompareOut(const double DataIn, const double Param);
+	unsigned int FIR_Counter;
+	double	m_LowPass_Buffer[BL];
+	unsigned int m_LowPass_Counter;
+	double	m_LowPass_Result;
+};
